@@ -1,0 +1,32 @@
+services:
+  typecho:
+    image: joyqi/typecho:nightly-php8.2-apache
+    container_name: typecho-server
+    restart: always
+    environment:
+      - TYPECHO_SITE_URL=http://example.com
+      - TYPECHO_DB_ADAPTER=Pdo_Mysql
+      - TYPECHO_DB_HOST=db
+      - TYPECHO_DB_PORT=3306
+      - TYPECHO_DB_USER=typecho_user
+      - TYPECHO_DB_PASSWORD=typecho_password
+      - TYPECHO_DB_DATABASE=typecho_db
+    ports:
+      - 80:80
+    volumes:
+      - ./:/data
+      - /tmp/usr:/app/usr
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: typecho-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=typecho_db
+      - MYSQL_USER=typecho_user
+      - MYSQL_PASSWORD=typecho_password
+    volumes:
+      - /tmp/mysql:/var/lib/mysql
